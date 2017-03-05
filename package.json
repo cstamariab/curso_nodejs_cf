@@ -2,11 +2,24 @@
   "name": "curso_nodejs_cf",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "form_params.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd hola_express && node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cstamariab/curso_nodejs_cf.git"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cstamariab/curso_nodejs_cf/issues"
+  },
+  "homepage": "https://github.com/cstamariab/curso_nodejs_cf#readme",
+  "dependencies": {
+    "express": "^4.15.0",
+    "jade": "^1.11.0"
+  }
 }

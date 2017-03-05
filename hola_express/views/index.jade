@@ -1,0 +1,21 @@
+doctype html
+html(lang="en")
+  head
+    title Mi primera pagina con express  + jade
+  body
+      
+    // uso de javascript con guion medio - , respetar indentacion  
+    //- != imprime HTML escaped string , = imprime solo javascript
+    - var arreglo = [1,2,3,4,5];
+    each item in arreglo      
+      case item
+        when 1
+          p El item era #{item}
+        when 2
+          p El item era #{item}
+        when 3
+          p El item era #{item}
+        when 4
+          p El item era #{item}
+        when 5
+          p El item era #{item}  
