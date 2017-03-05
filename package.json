@@ -5,7 +5,7 @@
   "main": "form_params.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cd hola_express && node app.js"
+    "start": "cd proyecto_cf && node app.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/cstamariab/curso_nodejs_cf#readme",
   "dependencies": {
+    "body-parser": "^1.17.0",
     "express": "^4.15.0",
     "jade": "^1.11.0"
   }
