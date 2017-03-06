@@ -30,9 +30,10 @@ app.post('/users', (req , res ,next)=> {
   var user = new User({
     email: req.body.email,
     password: req.body.password,
-    password_confirmation: req.body.password_confirmation}
-  );
-  console.log(user.password_confirmation);
+    username: req.body.username,
+    password_confirmation: req.body.password_confirmation
+  });
+  
   user.save((err)=>{
     if (err) {
       console.log(String(err));

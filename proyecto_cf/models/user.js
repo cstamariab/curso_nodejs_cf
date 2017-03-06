@@ -1,16 +1,26 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
+var password_validate = {
+    validator: (p) => {
+        return this.p_c == p; // retorna un boolean dependiendo de el Virtual
+    },
+    message: "Las contraseñas no son iguales"
+}
 mongoose.connect("mongodb://localhost/db_prueba");
 
 var posibles_valores = ["M","F"];
 var email_match = [/^[^\s@]+@[^\s@]+\.[^\s@]+$/,"Formato de email no valido"];
 
+
 var user_schema = new Schema({
     name: String,
     last_name: String,
     username: { type: String,required:true,maxlength: [50,"Username muy grande"] },
-    password: { type: String , minlength:[8,"El password es muy corto"] },
+    password: {
+        type: String ,
+        minlength:[8,"El password es muy corto"],
+        validate: password_validate
+    },
     age: { type: Number, min:[5,"La edad no puede ser menor que 5"] , max: [100,"La edad no puede ser mayor que 100"] },
     email: { type: String ,required: "El correo es obligatorio", match:email_match },
     date_of_birth: Date,
