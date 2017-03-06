@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser')
 var app = express();
 
+var User = require('./models/user');
 // VERBOS Http => GET / POST / PUT / PATCH / DELETE
 //  NEXT equivale a la siguiente funcion que serea ejecutada
 
@@ -18,13 +19,19 @@ app.get('/', (req , res ,next)=> {
 })
 
 app.get('/login', (req , res ,next)=> {
-  res.render('login');
+  User.find((err,doc)=>{
+    console.log(doc);
+    res.render('login');
+  })
 })
 
 app.post('/users', (req , res ,next)=> {
-  console.log("Email:"+req.body.email);
-  console.log("Contraseña:"+req.body.password);
-  res.send("Recibimos tus datos");
+
+  var user = new User({email: req.body.email,password: req.body.password});
+  user.save(()=>{
+    res.send("Guardamos tus datos");
+  });
+
 })
 
 app.listen(8080);
