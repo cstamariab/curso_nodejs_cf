@@ -18,12 +18,24 @@ app.get('/', (req , res ,next)=> {
   res.render('index');
 })
 
-app.get('/login', (req , res ,next)=> {
+app.get('/signup', (req , res ,next)=> {
   User.find((err,doc)=>{
     console.log(doc);
-    res.render('login');
+    res.render('signup');
   })
 })
+
+app.get('/login', (req , res ,next)=> {
+    res.render('login');
+})
+
+app.post('/sessions', (req , res ,next)=> {
+  // el segundo parametro es para obtener atributos especificos ej username
+  User.findOne({email:req.body.email,password:req.body.password},(err,docs) => {
+    console.log(docs);
+    res.send('Hola mundo');
+  });
+});
 
 app.post('/users', (req , res ,next)=> {
 
@@ -33,14 +45,17 @@ app.post('/users', (req , res ,next)=> {
     username: req.body.username,
     password_confirmation: req.body.password_confirmation
   });
-  
-  user.save((err)=>{
+
+// USO DE PROMESAS , 2 callbacks de parametros : 1 success , 2 error
+  user.save().then((user)=>{
+    res.send("Guardamos el usuario exitosamente");
+  }, (err) => {
     if (err) {
       console.log(String(err));
+      res.send("No pudimos guardar la imformacion")
     }
-    res.send("Guardamos tus datos");
   });
 
-})
+});
 
 app.listen(8080);
