@@ -26,31 +26,30 @@ app.use(session({
 
 app.set('view engine','jade')
 
-app.get('/', (req , res ,next)=> {
-  console.log(req.session.user_id);
+app.get('/', (req , res )=> {
   res.render('index');
 })
 
-app.get('/signup', (req , res ,next)=> {
+app.get('/signup', (req , res )=> {
   User.find((err,doc)=>{
-    console.log(doc);
     res.render('signup');
   })
 })
 
-app.get('/login', (req , res ,next)=> {
+app.get('/login', (req , res )=> {
     res.render('login');
 })
 
-app.post('/sessions', (req , res ,next)=> {
+app.post('/sessions', (req , res )=> {
   // el segundo parametro es para obtener atributos especificos ej username
   User.findOne({email:req.body.email,password:req.body.password},(err,user) => {
+    if (err){console.log(String(err));}
     req.session.user_id = user._id;
     res.redirect("./app/")
   });
 });
 
-app.post('/users', (req , res ,next)=> {
+app.post('/users', (req , res)=> {
 
   var user = new User({
     email: req.body.email,
