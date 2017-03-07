@@ -1,27 +1,30 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var User = require('./models/user');
-var session = require('express-session');
+var cookieSession = require('cookie-session');
 // Modularizacion de rutas con express , router
 // set con router app
 var router_app = require('./router_app');
 var session_middleware = require('./middlewares/session');
 
+var methodOverride = require('method-override');
 
 var app = express();
 // VERBOS Http => GET / POST / PUT / PATCH / DELETE
 //  NEXT equivale a la siguiente funcion que serea ejecutada
 
 // Servir archivos estaticos => img , css , js
-app.use("/public",express.static('public'));
+app.use('/public', express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // para peticiones application/json
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.use(session({
-  secret: "123asdasdasdf",
-  resave: false,
-  saveUninitialized: false
-}));
+app.use(methodOverride("_method"));
+app.use('/app/',methodOverride("_method"));
+
+app.use(cookieSession({
+  name: "session",
+  keys: ["llave-1","llave-2"]
+}))
 
 
 app.set('view engine','jade')
@@ -32,21 +35,22 @@ app.get('/', (req , res )=> {
 
 app.get('/signup', (req , res )=> {
   User.find((err,doc)=>{
+    console.log(doc);
     res.render('signup');
   })
 })
 
 app.get('/login', (req , res )=> {
-    res.render('login');
+  res.render('login');
 })
 
-app.post('/sessions', (req , res )=> {
+app.post('/sessions', (req , res , next)=> {
   // el segundo parametro es para obtener atributos especificos ej username
-  User.findOne({email:req.body.email,password:req.body.password},(err,user) => {
+  User.findOne({email:req.body.email,password:req.body.password}, function (err, user) {
     if (err){console.log(String(err));}
     req.session.user_id = user._id;
-    res.redirect("./app/")
-  });
+    res.redirect("./app/");
+  })
 });
 
 app.post('/users', (req , res)=> {
@@ -58,7 +62,7 @@ app.post('/users', (req , res)=> {
     password_confirmation: req.body.password_confirmation
   });
 
-// USO DE PROMESAS , 2 callbacks de parametros : 1 success , 2 error
+  // USO DE PROMESAS , 2 callbacks de parametros : 1 success , 2 error
   user.save().then((user)=>{
     res.send("Guardamos el usuario exitosamente");
   }, (err) => {
