@@ -1,20 +1,33 @@
-const express = require('express');
-const bodyParser = require('body-parser')
-var app = express();
-
+var express = require('express');
+var bodyParser = require('body-parser');
 var User = require('./models/user');
+var session = require('express-session');
+// Modularizacion de rutas con express , router
+// set con router app
+var router_app = require('./router_app');
+var session_middleware = require('./middlewares/session');
+
+
+var app = express();
 // VERBOS Http => GET / POST / PUT / PATCH / DELETE
 //  NEXT equivale a la siguiente funcion que serea ejecutada
 
 // Servir archivos estaticos => img , css , js
 app.use("/public",express.static('public'));
-
 app.use(bodyParser.json()); // para peticiones application/json
 app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(session({
+  secret: "123asdasdasdf",
+  resave: false,
+  saveUninitialized: false
+}));
+
 
 app.set('view engine','jade')
 
 app.get('/', (req , res ,next)=> {
+  console.log(req.session.user_id);
   res.render('index');
 })
 
@@ -31,9 +44,9 @@ app.get('/login', (req , res ,next)=> {
 
 app.post('/sessions', (req , res ,next)=> {
   // el segundo parametro es para obtener atributos especificos ej username
-  User.findOne({email:req.body.email,password:req.body.password},(err,docs) => {
-    console.log(docs);
-    res.send('Hola mundo');
+  User.findOne({email:req.body.email,password:req.body.password},(err,user) => {
+    req.session.user_id = user._id;
+    res.redirect("./app/")
   });
 });
 
@@ -52,10 +65,13 @@ app.post('/users', (req , res ,next)=> {
   }, (err) => {
     if (err) {
       console.log(String(err));
-      res.send("No pudimos guardar la imformacion")
+      res.send("No pudimos guardar la imformacion");
     }
   });
 
 });
+
+app.use('/app',session_middleware);
+app.use('/app',router_app);
 
 app.listen(8080);

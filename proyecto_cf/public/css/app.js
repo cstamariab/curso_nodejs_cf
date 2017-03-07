@@ -5,4 +5,17 @@ const {width, height, scale} = Dimensions.get("window"),
     vmin = Math.min(vw, vh),
     vmax = Math.max(vw, vh);
 
-export default StyleSheet.create({});
+export default StyleSheet.create({
+    "right-space": {
+        "marginRight": 1
+    },
+    "remove-float": {
+        "float": "none"
+    },
+    "top-space": {
+        "marginTop": 1.5
+    },
+    "big-top-space": {
+        "marginTop": 100
+    }
+});
