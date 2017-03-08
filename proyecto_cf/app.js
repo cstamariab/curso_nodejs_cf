@@ -6,6 +6,7 @@ var cookieSession = require('cookie-session');
 // set con router app
 var router_app = require('./router_app');
 var session_middleware = require('./middlewares/session');
+var formidable = require('express-formidable');
 
 var methodOverride = require('method-override');
 
@@ -15,8 +16,8 @@ var app = express();
 
 // Servir archivos estaticos => img , css , js
 app.use('/public', express.static(__dirname + '/public'));
-app.use(bodyParser.json()); // para peticiones application/json
-app.use(bodyParser.urlencoded({extended: true}));
+// app.use(bodyParser.json()); // para peticiones application/json
+// app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(methodOverride("_method"));
 app.use('/app/',methodOverride("_method"));
@@ -25,7 +26,7 @@ app.use(cookieSession({
   name: "session",
   keys: ["llave-1","llave-2"]
 }))
-
+app.use(formidable({keepExtensions: true}))
 
 app.set('view engine','jade')
 
@@ -46,7 +47,7 @@ app.get('/login', (req , res )=> {
 
 app.post('/sessions', (req , res , next)=> {
   // el segundo parametro es para obtener atributos especificos ej username
-  User.findOne({email:req.body.email,password:req.body.password}, function (err, user) {
+  User.findOne({email:req.fields.email,password:req.fields.password}, function (err, user) {
     if (err){console.log(String(err));}
     req.session.user_id = user._id;
     res.redirect("./app/");
@@ -56,10 +57,10 @@ app.post('/sessions', (req , res , next)=> {
 app.post('/users', (req , res)=> {
 
   var user = new User({
-    email: req.body.email,
-    password: req.body.password,
-    username: req.body.username,
-    password_confirmation: req.body.password_confirmation
+    email: req.fields.email,
+    password: req.fields.password,
+    username: req.fields.username,
+    password_confirmation: req.fields.password_confirmation
   });
 
   // USO DE PROMESAS , 2 callbacks de parametros : 1 success , 2 error

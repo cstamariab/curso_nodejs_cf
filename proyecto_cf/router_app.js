@@ -26,7 +26,7 @@ router.route("/imagenes/:id")
     res.render('app/imagenes/show');
 })
 .put((req,res)=>{
-  res.locals.imagen.title = req.body.title;
+  res.locals.imagen.title = req.fields.title;
   res.locals.imagen.creator = res.locals.user._id;
   res.locals.imagen.save((err)=>{
     if (!err) {
@@ -55,9 +55,9 @@ router.route("/imagenes")
   })
 })
 .post((req,res)=>{
-
+  console.log(req.fields.title);
   var imagen = new Imagen({
-    title: req.body.title,
+    title: req.fields.title,
     creator : res.locals.user._id
   });
   imagen.save().then((imagen)=>{
