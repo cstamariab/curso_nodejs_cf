@@ -52,5 +52,8 @@ export default StyleSheet.create({
     },
     "tr:nth-of-type(odd)": {
         "backgroundColor": "#eee"
+    },
+    "formlink": {
+        "display": "inline-block"
     }
 });
