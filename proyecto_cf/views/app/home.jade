@@ -1,5 +1,10 @@
 extends ../layout.jade
 block contenido
-  div(class="col-md-6 remove-float center-block big-top-space")
-    h1 Hola #{ user.email }
-    a(href="/app/imagenes/new" class="btn btn-success") Nueva Imagen
+  div(class="col-md-6 remove-float center-block big-top-space")    
+    for imagen in imagenes
+      div(class="img-container")
+        h2 Titulo #{imagen.title}
+        img(src="/public/imagenes/#{imagen._id}.#{imagen.extension}" class="main-img")
+        if(typeof imagen.creator != "undefined")
+          p por #{ imagen.creator.email }
+  script(src="/public/js/client.js")

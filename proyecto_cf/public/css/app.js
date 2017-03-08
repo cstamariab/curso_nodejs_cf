@@ -55,5 +55,28 @@ export default StyleSheet.create({
     },
     "formlink": {
         "display": "inline-block"
+    },
+    "img": {
+        "maxWidth": "100%"
+    },
+    "img-container": {
+        "width": 700,
+        "maxWidth": "100%",
+        "marginTop": 0,
+        "marginRight": "auto",
+        "marginBottom": 0,
+        "marginLeft": "auto"
+    },
+    "img-container h1 h2": {
+        "paddingTop": 15,
+        "paddingRight": 15,
+        "paddingBottom": 15,
+        "paddingLeft": 15,
+        "borderBottom": "1px solid #222"
+    },
+    "img-container p": {
+        "textAlign": "right",
+        "fontSize": 1.2,
+        "marginTop": 1
     }
 });

@@ -10,7 +10,7 @@ module.exports = (req,res,next) => {
         res.rediret('/login');
       }else{
         res.locals = { user: user }
-        next(); 
+        next();
       }
     })
 

@@ -2,15 +2,20 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var User = require('./models/user');
 var cookieSession = require('cookie-session');
-// Modularizacion de rutas con express , router
-// set con router app
-var router_app = require('./router_app');
+var router_app = require('./router_app');// Modularizacion de rutas con express , router// set con router app
 var session_middleware = require('./middlewares/session');
 var formidable = require('express-formidable');
-
 var methodOverride = require('method-override');
-
+var http = require('http');
+var realTime= require('./realtime');
 var app = express();
+
+var server = http.Server(app);
+
+realTime(server,cookieSession({
+  name: "session",
+  keys: ["llave-1","llave-2"]
+}))
 // VERBOS Http => GET / POST / PUT / PATCH / DELETE
 //  NEXT equivale a la siguiente funcion que serea ejecutada
 
@@ -51,6 +56,7 @@ app.post('/sessions', (req , res , next)=> {
     if (err){console.log(String(err));}
     req.session.user_id = user._id;
     res.redirect("./app/");
+    res.end();
   })
 });
 
@@ -78,4 +84,4 @@ app.post('/users', (req , res)=> {
 app.use('/app',session_middleware);
 app.use('/app',router_app);
 
-app.listen(8080);
+server.listen(8080);

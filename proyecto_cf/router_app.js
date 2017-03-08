@@ -4,8 +4,13 @@ var fs = require('fs');
 var router = express.Router();
 var img_finder_middleware = require('./middlewares/find_img');
 
-router.get('/',(req,res) => {
-  res.render('app/home');
+router.get('/',(req,res,next) => {
+  Imagen.find({})
+  .populate('creator')
+  .exec((err, imagenes) => {
+    if (err) {console.log(err);}
+    res.render('app/home' ,{imagenes:imagenes});
+  })
 });
 
 /* REST */
@@ -67,8 +72,8 @@ router.route("/imagenes")
     fs.rename(req.files.archivo.path ,"public/imagenes/"+imagen._id + "." + extension);
     res.redirect("/app/imagenes/"+imagen._id);
   }, (err) => {
-      if (err) {console.log(err);}
-      res.redirect('/app/imagenes/new');
+    if (err) {console.log(err);}
+    res.redirect('/app/imagenes/new');
   });
 });
 
