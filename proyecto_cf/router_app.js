@@ -1,5 +1,6 @@
 var express = require('express');
 var Imagen = require("./models/imagen");
+var fs = require('fs');
 var router = express.Router();
 var img_finder_middleware = require('./middlewares/find_img');
 
@@ -16,14 +17,13 @@ router.get("/imagenes/new",(req,res)=>{
 router.all("/imagenes/:id*",img_finder_middleware)
 
 router.get("/imagenes/:id/edit", (req,res)=>{
-    // Middleware Find img carga FindById
-    res.render('app/imagenes/edit');
-
+  // Middleware Find img carga FindById
+  res.render('app/imagenes/edit');
 });
 
 router.route("/imagenes/:id")
 .get((req,res)=>{
-    res.render('app/imagenes/show');
+  res.render('app/imagenes/show');
 })
 .put((req,res)=>{
   res.locals.imagen.title = req.fields.title;
@@ -55,20 +55,20 @@ router.route("/imagenes")
   })
 })
 .post((req,res)=>{
-  console.log(req.fields.title);
+
+  var extension = req.files.archivo.name.split(".").pop(); // pop el ultimo del arreglo
+
   var imagen = new Imagen({
     title: req.fields.title,
-    creator : res.locals.user._id
+    creator : res.locals.user._id,
+    extension : extension
   });
   imagen.save().then((imagen)=>{
-    res.redirect("/app/imagenes/"+imagen._id)
+    fs.rename(req.files.archivo.path ,"public/imagenes/"+imagen._id + "." + extension);
+    res.redirect("/app/imagenes/"+imagen._id);
   }, (err) => {
-    if(!err) {
-      res.redirect('/app/imagenes/'+imagen._id);
-    }else{
-      console.log(imagen);
-      res.render(err);
-    }
+      if (err) {console.log(err);}
+      res.redirect('/app/imagenes/new');
   });
 });
 
